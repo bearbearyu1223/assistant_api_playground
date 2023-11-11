@@ -1,1 +1,1 @@
-# assistant_api_playground
+# Assistant API Playground
