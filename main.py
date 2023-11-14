@@ -74,50 +74,49 @@ if __name__=="__main__":
         model="gpt-4-1106-preview", 
         file_ids=file_ids,           
     )
-
+    
     thread = client.beta.threads.create()
-    message = "Give me some ideas to make beef dish with Lantin American flavors with detailed steps, also if there are sides dessert, or salards that can pair with it nicely, find the recipe information and summarize how to make them as well."
+    i = 0
+    while True:
+        try:
+            message = input('Enter a query related to food preparation and cooking: ')
+            message = client.beta.threads.messages.create(
+                thread_id=thread.id, role="user", content=message)
 
-    message = client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content=message
-    )
+            run = client.beta.threads.runs.create(
+                thread_id = thread.id,
+                assistant_id = assistant.id,
+                instructions = "Please address the user as Han, and only generate response using the cookbooks she shared with you. If you cannot help answer the questions, just politely end the conversation."
+            )
 
-    run = client.beta.threads.runs.create(
-        thread_id = thread.id,
-        assistant_id = assistant.id,
-        instructions = "Please address the user as Han, and only generate response using the cookbooks she shared with you. If you cannot help answer the questions, just politely end the conversation."
-    )
+            wait_for_run_completion(client, thread.id, run.id)
 
-    wait_for_run_completion(client, thread.id, run.id)
+            messages = client.beta.threads.messages.list(
+                thread_id=thread.id
+            )
+            last_message = messages.data[0]
+            response = last_message.content[0].text.value
+            print(response)
 
-    messages = client.beta.threads.messages.list(
-        thread_id=thread.id
-    )
-    last_message = messages.data[0]
-    response = last_message.content[0].text.value
-    print(response)
+            speech_file_name = "tts_response_" + str(i)+".mp3"
+            i = i + 1
 
-    speech_file_path = Path(__file__).parent / "speech.mp3"
-    response = client.audio.speech.create(
-        model="tts-1",
-        voice="alloy",
-        input=response,
-    )
+            speech_file_path = Path(__file__).parent / speech_file_name
+            print()
+            print("wait for tts to complete ...")
+            response = client.audio.speech.create(
+                model="tts-1",
+                voice="alloy",
+                input=response,
+            )
+            response.stream_to_file(speech_file_path)
+            print()
+            print("start tts playback ...")
+            play_mp3(speech_file_name)
 
-    response.stream_to_file(speech_file_path)
-    play_mp3("speech.mp3")
-
-
-
-
-
-    
-
-
-
-
-    
+        except KeyboardInterrupt:  # Ctrl + C - will exit program immediately if not caught
+            break
+        print()
+        print("Program Exit")
 
 
