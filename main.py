@@ -5,7 +5,6 @@ from datetime import datetime
 from pathlib import Path
 import openai
 from openai import OpenAI
-from openai import OpenAI
 from dotenv import load_dotenv
 import pygame
 
