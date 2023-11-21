@@ -7,6 +7,8 @@ import openai
 from openai import OpenAI
 from dotenv import load_dotenv
 import pygame
+import urllib.request 
+from PIL import Image 
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
@@ -69,23 +71,33 @@ if __name__=="__main__":
                       You can answer culinary questions in real-time, help plan meals based on\
                       dietary preferences or restrictions,\
                       and create grocery shopping lists based off recipes.",
-        tools=[{"type": "retrieval"}], 
+        tools=[{"type": "retrieval"}, {"type": "code_interpreter"}], 
         model="gpt-4-1106-preview", 
         file_ids=file_ids,           
     )
     
     thread = client.beta.threads.create()
     i = 0
+    recipe_info=[]
     while True:
         try:
             message = input('Enter a query related to food preparation and cooking: ')
             message = client.beta.threads.messages.create(
                 thread_id=thread.id, role="user", content=message)
+            
+            instructions="""
+            Address the user as 'Han' in all communications. Respond to Han's queries exclusively using information from the cookbooks she has provided. 
+            In cases where Han specifically requests a visual representation of a recipe, 
+            reply with: 'Absolutely! Prepare for a delightful visual preview of the recipe, coming up shortly. Please hold on!'
+            When providing a recipe in response to Han's question, always begin your response with: 'Here's a recipe I found!' 
+            Then, concisely summarize the recipe using a few bullet points, ensuring the summary is no longer than 150 words. 
+            If you're unable to find a suitable recipe or answer Han's question, politely conclude the conversation.
+            """
 
             run = client.beta.threads.runs.create(
                 thread_id = thread.id,
                 assistant_id = assistant.id,
-                instructions = "Please address the user as Han, and only generate response using the cookbooks she shared with you. If you cannot help answer the questions, just politely end the conversation."
+                instructions = instructions
             )
 
             wait_for_run_completion(client, thread.id, run.id)
@@ -94,8 +106,27 @@ if __name__=="__main__":
                 thread_id=thread.id
             )
             last_message = messages.data[0]
-            response = last_message.content[0].text.value
-            print(response)
+            text_response = last_message.content[0].text.value
+            print(text_response)
+
+            if "Here is a recipe that I found!" in text_response:
+                recipe_info.append(text_response)
+
+            if "a delightful visual preview of the recipe" in text_response:
+                for i in len(recipe_info):
+                    prompt =f"Help me generate a visual representation of the food described in this recipe: '{recipe_info[i]}'."
+                    image_gen = client.images.generate(
+                        model="dall-e-3",
+                        prompt=prompt,
+                        size="1024x1024",
+                        quality="standard",
+                        n=1,
+                    )
+                    image_url = image_gen.data[0].url
+                    image_name = "image"+"_"+str(i)+"_"+".png"
+                    urllib.request.urlretrieve(image_url, image_name) 
+                    img = Image.open(image_name) 
+                    img.show()
 
             speech_file_name = "tts_response_" + str(i)+".mp3"
             i = i + 1
@@ -103,12 +134,12 @@ if __name__=="__main__":
             speech_file_path = Path(__file__).parent / speech_file_name
             print()
             print("wait for tts to complete ...")
-            response = client.audio.speech.create(
+            audio_response = client.audio.speech.create(
                 model="tts-1",
                 voice="alloy",
-                input=response,
+                input=text_response,
             )
-            response.stream_to_file(speech_file_path)
+            audio_response.stream_to_file(speech_file_path)
             print()
             print("start tts playback ...")
             play_mp3(speech_file_name)
