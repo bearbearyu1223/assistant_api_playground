@@ -1,5 +1,5 @@
 # Craft Your Own Kitchen Companion: Leveraging OpenAI Assistant, Image Generation, and Text-to-Speech for a Revolutionary Cooking Experience 
- <img src="assets/cropped_image.png"  width="70%" height="10%">  
+ <img src="assets/cropped_image.png"  width="80%" height="20%">  
 
 ## TL;DR
  OpenAI unveiled its [Assistant API](https://platform.openai.com/docs/assistants/overview) during its very first developer conference-[OpenAI DevDay](https://devday.openai.com/). This marked a significant addition to the suite of tools and models available for building conversational AI, a domain in which I've been actively engaged. 
