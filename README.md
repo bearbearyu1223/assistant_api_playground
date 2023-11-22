@@ -37,12 +37,12 @@ and simply press `Ctrl + C` to exit the program.
 Also see a sample converstation below: 
 | **Turn** 	| **User Query**                                                                                                                                  	| **Assistant    Response** 	        |
 |----------	|-------------------------------------------------------------------------------------------------------------------------------------------------	|------------------------	|
-|     0    	| 👩🏻‍🍳: Hi there, Thanksgiving is coming!<br>I would like to have some ideas for cooking!                                                          	| 🔮 ![tts playback 0](assets/tts_response_0.mp4)       	|
-|     1    	| 👩🏻‍🍳: Yes, please                                                                                                                                	| 🔮 tts playback 1       	|
-|     2    	| 👩🏻‍🍳: How does the cornbread crusted turkey looks like?                                                                                          	| 🔮 tts playback 2       	|
+|     0    	| 👩🏻‍🍳: Hi there, Thanksgiving is coming!<br>I would like to have some ideas for cooking!                                                          	| 🔮 tts playback 0  <video src="assets/tts_response_0.mp3" controls="controls"> </video>      	|
+|     1    	| 👩🏻‍🍳: Yes, please                                                                                                                                	| 🔮 tts playback 1 <video src="assets/tts_response_1.mp3" controls="controls"> </video>       	|
+|     2    	| 👩🏻‍🍳: How does the cornbread crusted turkey looks like?                                                                                          	| 🔮 tts playback 2 <video src="assets/tts_response_2.mp3" controls="controls"> </video>      	|
 |          	|                                                                                                                                                 	                 <img src="assets/DALL_E_Cornbread_Crusted_Turkey.png"  width="50%" height="50%">                    	||
-|     3    	| 👩🏻‍🍳: That is nice! And how to make cornbread?                                                                                                  	| 🔮 tts playback 3       	|
-|     4    	| 👩🏻‍🍳: No, actually, can you create a grocery list for me, <br>including the recipes for the cornbread crusted turkey <br>and also the cornbread?  	| 🔮 tts playback 4       	|
+|     3    	| 👩🏻‍🍳: That is nice! And how to make cornbread?                                                                                                  	| 🔮 tts playback 3 <video src="assets/tts_response_3.mp3" controls="controls"> </video>        	|
+|     4    	| 👩🏻‍🍳: No, actually, can you create a grocery list for me, <br>including the recipes for the cornbread crusted turkey <br>and also the cornbread?  	| 🔮 tts playback 4 <video src="assets/tts_response_4.mp3" controls="controls"> </video>       	|
 
 
 
