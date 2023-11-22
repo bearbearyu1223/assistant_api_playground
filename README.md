@@ -37,7 +37,7 @@ and simply press `Ctrl + C` to exit the program.
 Also see a sample converstation below: 
 | **Turn** 	| **User Query**                                                                                                                                  	| **Assistant    Response** 	        |
 |----------	|-------------------------------------------------------------------------------------------------------------------------------------------------	|------------------------	|
-|     0    	| 👩🏻‍🍳: Hi there, Thanksgiving is coming!<br>I would like to have some ideas for cooking!                                                          	| 🔮 tts playback 0       	|
+|     0    	| 👩🏻‍🍳: Hi there, Thanksgiving is coming!<br>I would like to have some ideas for cooking!                                                          	| 🔮 ![tts playback 0](assets/tts_response_0.mp4)       	|
 |     1    	| 👩🏻‍🍳: Yes, please                                                                                                                                	| 🔮 tts playback 1       	|
 |     2    	| 👩🏻‍🍳: How does the cornbread crusted turkey looks like?                                                                                          	| 🔮 tts playback 2       	|
 |          	|                                                                                                                                                 	                 <img src="assets/DALL_E_Cornbread_Crusted_Turkey.png"  width="50%" height="50%">                    	||
