@@ -86,12 +86,16 @@ if __name__=="__main__":
                 thread_id=thread.id, role="user", content=message)
             
             instructions="""
-            Address the user as 'Han' in all communications. Respond to Han's queries exclusively using information from the cookbooks she has provided. 
-            In cases where Han specifically requests a visual representation of a recipe, 
-            reply with: 'Absolutely! Prepare for a delightful visual preview of the recipe, coming up shortly. Please hold on!'
-            When providing a recipe in response to Han's question, always begin your response with: 'Here's a recipe I found!' 
-            Then, concisely summarize the recipe using a few bullet points, ensuring the summary is no longer than 150 words. 
-            If you're unable to find a suitable recipe or answer Han's question, politely conclude the conversation.
+            Address Han directly in all communications. When responding to Han's queries, use information exclusively from the cookbooks she has provided.
+
+            If Han requests a visual representation of a recipe, always respond first with: 'Absolutely! Prepare for a delightful visual preview of the recipe, 
+            coming up shortly. Please hold on!' Then, create a textual prompt to help visualize the recipe Han has inquired about. 
+
+            When providing a recipe in response to Han's question, begin with: 'Here's a recipe I found!' and concisely summarize the recipe using bullet points, 
+            keeping the summary within 150 words. 
+
+            In cases where Han's queries cannot be addressed with the provided cookbooks or if a suitable recipe is not found, politely inform Han 
+            of this limitation and conclude the conversation respectfully.
             """
 
             run = client.beta.threads.runs.create(
@@ -109,24 +113,23 @@ if __name__=="__main__":
             text_response = last_message.content[0].text.value
             print(text_response)
 
-            if "Here is a recipe that I found!" in text_response:
-                recipe_info.append(text_response)
-
             if "a delightful visual preview of the recipe" in text_response:
-                for i in len(recipe_info):
-                    prompt =f"Help me generate a visual representation of the food described in this recipe: '{recipe_info[i]}'."
-                    image_gen = client.images.generate(
-                        model="dall-e-3",
-                        prompt=prompt,
-                        size="1024x1024",
-                        quality="standard",
-                        n=1,
-                    )
-                    image_url = image_gen.data[0].url
-                    image_name = "image"+"_"+str(i)+"_"+".png"
-                    urllib.request.urlretrieve(image_url, image_name) 
-                    img = Image.open(image_name) 
-                    img.show()
+
+                recipe_info = text_response.replace('Absolutely! Prepare for a delightful visual preview of the recipe, coming up shortly. Please hold on!','')
+
+                prompt =f"Help me generate a visual representation of the food described in this note: '{recipe_info}'."
+                image_gen = client.images.generate(
+                    model="dall-e-3",
+                    prompt=prompt,
+                    size="1024x1024",
+                    quality="standard",
+                    n=1,
+                )
+                image_url = image_gen.data[0].url
+                image_name = "image"+"_"+".png"
+                urllib.request.urlretrieve(image_url, image_name) 
+                img = Image.open(image_name) 
+                img.show()
 
             speech_file_name = "tts_response_" + str(i)+".mp3"
             i = i + 1
@@ -148,5 +151,4 @@ if __name__=="__main__":
             break
         print()
         print("Program Exit")
-
 
